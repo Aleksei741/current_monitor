@@ -26,7 +26,7 @@
 static uint8_t Addr[INA226_COUNT] = {0x40, 0x41, 0x44, 0x45};
 static float Rshunt[INA226_COUNT] = {0.1f, 0.1f, 0.1f, 0.1f};
 static float CurrentLSB[INA226_COUNT] = {0.00025f, 0.00025f, 0.00025f, 0.00025f}; // 0.00025 A/бит
-static float current[INA226_COUNT] = {0}; // Текущий ток в А
+static double current[INA226_COUNT] = {0}; // Текущий ток в А
 static uint32_t current_na[INA226_COUNT] = {0}; // Текущий ток в А
 static uint8_t ina226_cnt = 0; // Текущий номер опрашиваемой микросхемы
 static int ina226_stage = 0; // Состояние автомата опроса
@@ -83,6 +83,8 @@ ina226_status_t INA226_get_status(void)
     if(timeWatchdog < HAL_GetTick() && ina226_status == INA226_OK) 
     {
         ina226_status = INA226_TIMEOUT; // Таймаут
+        I2C1_DeInit();
+        I2C1_Init();
     }
     return ina226_status;
 }
@@ -92,10 +94,10 @@ void INA226_ReadCurrents(float* current_)
 {
     for (int i = 0; i < INA226_COUNT; i++) 
     {
-        current_[i] = current[i];
+        current_[i] = (float)current[i];
     }
 }
-
+//------------------------------------------------------------------------------
 void INA226_ReadCurrents_na(uint32_t* current_)
 {
     for (int i = 0; i < INA226_COUNT; i++) 
@@ -130,7 +132,7 @@ static void callback(i2c1_ret_t status)
         if(ina226_stage == 1) 
         {
             int16_t raw = (rx_buf[ina226_cnt][0] << 8) | rx_buf[ina226_cnt][1];
-            current[ina226_cnt] = (float)raw * CurrentLSB[ina226_cnt]; // в А
+            current[ina226_cnt] = (double)raw * CurrentLSB[ina226_cnt] / 1000.0f; // в мА
             current_na[ina226_cnt] = (uint32_t)(current[ina226_cnt] * 1000000000.0f); // в нА
 
             // Переходим к следующему INA226

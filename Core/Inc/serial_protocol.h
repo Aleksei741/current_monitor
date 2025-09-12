@@ -24,7 +24,9 @@ typedef void (*SerialProtocol_UpdateCallback)(void* param, ParamType_t type);
 // Секция прототипов глобальных функций
 //******************************************************************************
 void InitSerialProtocol(SerialProtocol_UpdateCallback cb);
-void TransmiteCurrent(uint32_t* currents);
+void TransmiteCurrent_double(double* currents);
+void TransmiteCurrent_uint(uint32_t* currents);
+void SerialProcess(void);
 #ifdef __cplusplus
 }
 #endif

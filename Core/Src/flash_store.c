@@ -93,9 +93,8 @@ HAL_StatusTypeDef FlashStore_WriteParams(void* param, size_t size)
   uint32_t buffer[WORDS_IN_BLOCK];
   memset(buffer, 0xFF, sizeof(buffer));
   memcpy(buffer, param, size); // копируем данные структуры в буфер
-  
-  uint32_t* flag_ptr = &buffer[size / 4]; // следующее слово после структуры
-  *flag_ptr = FERST_START_VALUE;          // записываем флаг
+
+  buffer[WORDS_IN_BLOCK-1] = FERST_START_VALUE;          // записываем флаг
   
   __disable_irq();
   Flash_Unlock();
@@ -120,9 +119,9 @@ uint32_t flagFirstStart;
 void FlashStore_ReadParams(void* param, size_t size)
 {
   if(param == NULL) return;
-  if(size+1 > BLOCK_SIZE) size = BLOCK_SIZE;
+  if(size+4 > BLOCK_SIZE) size = BLOCK_SIZE;
   
-  flagFirstStart = *((uint32_t*)(last_page_addr + size)); // читаем слово после структуры
+  flagFirstStart = *((uint32_t*)(last_page_addr + BLOCK_SIZE-4)); // читаем слово 
   if(flagFirstStart != FERST_START_VALUE)
     return; // flash пустая, не читаем
   

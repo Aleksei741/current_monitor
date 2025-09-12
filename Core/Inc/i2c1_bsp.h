@@ -32,6 +32,7 @@ typedef enum {
 //******************************************************************************
 typedef void (*i2c_callback_t)(i2c1_ret_t status);
 void I2C1_Init(void);
+void I2C1_DeInit(void);
 i2c1_ret_t I2C1_Write(uint8_t addr7bit, const uint8_t *data, size_t len, uint32_t timeout_ms);
 i2c1_ret_t I2C1_Read(uint8_t addr7bit, uint8_t *data, size_t len, uint32_t timeout_ms);
 i2c1_ret_t I2C1_Write_IT(uint8_t addr7bit, const uint8_t *data, size_t len);
