@@ -5,6 +5,7 @@
 #include "usb_device.h"
 #include "usbd_cdc_if.h"
 #include "CurrentMonitor.h"
+#include <inttypes.h>
 //******************************************************************************
 // Секция определения констант
 //******************************************************************************
@@ -19,12 +20,20 @@
 #define CMD_AVG_WND        "avg_wnd"
 
 // Форматы ответа протокола с использованием define команд
-#define FMT_ADDRESS       CMD_ADDRESS " %u %u %u %u\n"
+//#define FMT_ADDRESS       CMD_ADDRESS " %u %u %u %u\n"
+//#define FMT_RSHUNT        CMD_RSHUNT " %.6f %.6f %.6f %.6f\n"
+//#define FMT_CURRENT_LSB   CMD_CURRENT_LSB " %.6f %.6f %.6f %.6f\n"
+//#define FMT_OUT_DIVIDER   CMD_OUT_DIVIDER " %d %d %d %d\n"
+//#define FMT_DOWNSAMPLE    CMD_DOWNSAMPLE " %d\n"
+//#define FMT_AVG_WND       CMD_AVG_WND " %u %u %u %u\n"
+
+#define FMT_ADDRESS       CMD_ADDRESS " %" PRIu32 " %" PRIu32 " %" PRIu32 " %" PRIu32 "\n"
 #define FMT_RSHUNT        CMD_RSHUNT " %.6f %.6f %.6f %.6f\n"
 #define FMT_CURRENT_LSB   CMD_CURRENT_LSB " %.6f %.6f %.6f %.6f\n"
-#define FMT_OUT_DIVIDER   CMD_OUT_DIVIDER " %d %d %d %d\n"
-#define FMT_DOWNSAMPLE    CMD_DOWNSAMPLE " %d\n"
-#define FMT_AVG_WND       CMD_AVG_WND " %u %u %u %u\n"
+#define FMT_OUT_DIVIDER   CMD_OUT_DIVIDER " %" PRId32 " %" PRId32 " %" PRId32 " %" PRId32 "\n"
+#define FMT_DOWNSAMPLE    CMD_DOWNSAMPLE " %" PRId32 "\n"
+#define FMT_AVG_WND       CMD_AVG_WND " %" PRIu32 " %" PRIu32 " %" PRIu32 " %" PRIu32 "\n"
+
 #define FMT_ERROR         "ERROR\n"
 
 //******************************************************************************
@@ -79,19 +88,20 @@ void TransmiteCurrent_double(double* currents)
 //------------------------------------------------------------------------------
 void TransmiteCurrent_uint(uint32_t* currents)
 {
-  float t = HAL_GetTick() / 1000.0f;
-  snprintf(msg, sizeof(msg),
-           "%.3f %d %d %d %d\n",
-           (double)t, 
-           currents[0], 
-           currents[1], 
-           currents[2], 
-           currents[3]);
-  
-  while(CDC_Transmit_FS((uint8_t*)msg, strlen(msg)) != USBD_OK)
-  {
-    HAL_Delay(1);
-  }
+    char msg[128];
+    float t = HAL_GetTick() / 1000.0f;
+    snprintf(msg, sizeof(msg),
+             "%.3f %" PRIu32 " %" PRIu32 " %" PRIu32 " %" PRIu32 "\n",
+             (double)t,
+             currents[0],
+             currents[1],
+             currents[2],
+             currents[3]);
+
+    while (CDC_Transmit_FS((uint8_t*)msg, strlen(msg)) != USBD_OK)
+    {
+        HAL_Delay(1);
+    }
 }
 //------------------------------------------------------------------------------
 void ReceiveCDCAccumulate(uint8_t* Buf, uint32_t *Len)

@@ -215,13 +215,15 @@ void UpdateParameters(void* param, ParamType_t type)
     {
       uint32_t* vals = (uint32_t*)param;
       for(size_t i = 0; i < INA226_COUNT; i++)
+      {
         if(vals[i] == 0)
           parameters.OutDivider[i] = 1; 
         else
-          parameters.OutDivider[i] = vals[i];       
-        flagSaveParams = 1;
-        timeDelaySaveParam = HAL_GetTick() + DELAY_SAVE_PARAM;
-        break;
+          parameters.OutDivider[i] = vals[i];
+      }
+	  flagSaveParams = 1;
+	  timeDelaySaveParam = HAL_GetTick() + DELAY_SAVE_PARAM;
+	  break;
     }
     
   case TYPE_DOWNSAMPLE:

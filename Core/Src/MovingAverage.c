@@ -50,13 +50,15 @@ float MovingAverage_Calc(uint8_t channel, uint8_t nAvg)
     uint8_t nAvg_ = (nAvg > filt->count) ? filt->count : nAvg;
     uint8_t cntAvg = nAvg_;
       
-    float sum = 0.0f;    
+    double sum = 0.0;
     do
     {
       // начинаем с последнего записанного элемента и идём "назад" по окну
-      sum += filt->buffer[index--];
+      sum += (double)filt->buffer[index--];
     }
     while(--cntAvg);
     
-    return sum / nAvg_;
+    sum /= (double)nAvg_;
+
+    return (float)sum;
 }
