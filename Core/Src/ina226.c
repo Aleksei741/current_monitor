@@ -132,7 +132,7 @@ static void callback(i2c1_ret_t status)
         if(ina226_stage == 1) 
         {
             int16_t raw = (rx_buf[ina226_cnt][0] << 8) | rx_buf[ina226_cnt][1];
-            current[ina226_cnt] = (double)raw * CurrentLSB[ina226_cnt] / 1000.0f; // в мА
+            current[ina226_cnt] = (double)raw * (double)CurrentLSB[ina226_cnt] / 1000.0; // в мА
             current_na[ina226_cnt] = (uint32_t)(current[ina226_cnt] * 1000000000.0f); // в нА
 
             // Переходим к следующему INA226

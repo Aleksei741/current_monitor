@@ -35,7 +35,6 @@ static char rx_msg[RX_LINE_MAX];
 static char rx_line[RX_LINE_MAX];
 static uint16_t rx_index = 0;
 static SerialProtocol_UpdateCallback UpdateParamModule = NULL;
-static uint32_t tx_len = 0;
 // флаги для каждого параметра
 static uint8_t flagRX = 0;
 //******************************************************************************
