@@ -27,12 +27,12 @@
 //#define FMT_DOWNSAMPLE    CMD_DOWNSAMPLE " %d\n"
 //#define FMT_AVG_WND       CMD_AVG_WND " %u %u %u %u\n"
 
-#define FMT_ADDRESS       CMD_ADDRESS " %" PRIu32 " %" PRIu32 " %" PRIu32 " %" PRIu32 "\n"
+#define FMT_ADDRESS 	  CMD_ADDRESS " %u %u %u %u\n"
 #define FMT_RSHUNT        CMD_RSHUNT " %.6f %.6f %.6f %.6f\n"
 #define FMT_CURRENT_LSB   CMD_CURRENT_LSB " %.6f %.6f %.6f %.6f\n"
 #define FMT_OUT_DIVIDER   CMD_OUT_DIVIDER " %" PRId32 " %" PRId32 " %" PRId32 " %" PRId32 "\n"
 #define FMT_DOWNSAMPLE    CMD_DOWNSAMPLE " %" PRId32 "\n"
-#define FMT_AVG_WND       CMD_AVG_WND " %" PRIu32 " %" PRIu32 " %" PRIu32 " %" PRIu32 "\n"
+#define FMT_AVG_WND       CMD_AVG_WND " %u %u %u %u\n"
 
 #define FMT_ERROR         "ERROR\n"
 
